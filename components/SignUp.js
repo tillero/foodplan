@@ -30,12 +30,23 @@ const SignUp = ({ setOpened }) => {
     },
   });
 
+  const createUserInDB = (uid) => {
+    fetch("/api/createUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ uid }),
+    });
+  };
+
   const onSubmit = () => {
     form.clearErrors();
     form.validate();
     createUserWithEmailAndPassword(form.values.email, form.values.passwordOne)
       .then((authUser) => {
         setOpened(false);
+        createUserInDB(authUser.user.uid);
         router.push("/profile");
       })
       .catch((error) => {

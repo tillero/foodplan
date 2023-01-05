@@ -15,7 +15,7 @@ const Profile = () => {
 
   return (
     <div>
-      <Text>Hello {!loading && authUser && authUser.email}!</Text>
+      <Text>Hallo {!loading && authUser && authUser.email}!</Text>
     </div>
   );
 };
