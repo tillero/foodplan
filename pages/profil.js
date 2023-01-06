@@ -11,7 +11,7 @@ const Profile = () => {
     if (!loading && !authUser) {
       router.push("/");
     }
-  }, [authUser, loading]);
+  }, [authUser, loading, router]);
 
   return (
     <div>

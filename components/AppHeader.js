@@ -17,6 +17,24 @@ import SignUp from "./SignUp";
 import Login from "./Login";
 import { useRouter } from "next/router";
 
+const Navigation = ({ isLoggedIn }) => {
+  return (
+    <>
+      <Link href="/so-gehts" hidden={isLoggedIn}>
+        So funktioniert es
+      </Link>
+      <Link hidden={!isLoggedIn} href="/profil">
+        Profil
+      </Link>
+      <Link hidden={!isLoggedIn} href="/haushalt">
+        Haushalt
+      </Link>
+      <Link href="/plan">Wochenplan</Link>
+      <Link href="/rezepte">Rezepte</Link>
+    </>
+  );
+};
+
 const AppHeader = (props) => {
   const [navOpened, setNavOpened] = useState(false);
   const [signupOpened, setSignupOpened] = useState(false);
@@ -60,17 +78,7 @@ const AppHeader = (props) => {
             hidden={!navOpened}
             width={{ sm: 200, lg: 300 }}
           >
-            <Link href="/">So funktioniert es</Link>
-            <Link hidden={!isLoggedIn} href="/">
-              Profil
-            </Link>
-            <Link hidden={!isLoggedIn} href="/">
-              Haushalt
-            </Link>
-            <Link hidden={isLoggedIn} href="/">
-              Wochenplan
-            </Link>
-            <Link href="/">Rezepte</Link>
+            <Navigation isLoggedIn={isLoggedIn} />
           </Navbar>
         }
         navbarOffsetBreakpoint={10000}
@@ -114,17 +122,7 @@ const AppHeader = (props) => {
                       gap: "60px",
                     }}
                   >
-                    <Link href="/">So funktioniert es</Link>
-                    <Link hidden={!isLoggedIn} href="/">
-                      Profil
-                    </Link>
-                    <Link hidden={!isLoggedIn} href="/">
-                      Haushalt
-                    </Link>
-                    <Link hidden={isLoggedIn} href="/">
-                      Wochenplan
-                    </Link>
-                    <Link href="/">Rezepte</Link>
+                    <Navigation isLoggedIn={isLoggedIn} />
                   </div>
                 </div>
               </MediaQuery>
