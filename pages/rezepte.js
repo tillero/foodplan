@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/AuthUserContext";
 import { Text } from "@mantine/core";
+import CreateRecipeForm from "../components/CreateRecipeForm";
 
 const Recipes = () => {
   const { authUser, loading } = useAuth();
@@ -19,6 +20,7 @@ const Recipes = () => {
   return (
     <div>
       <Text>Hallo {!loading && authUser && authUser.email}!</Text>
+      <CreateRecipeForm />
     </div>
   );
 };

@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
           withGlobalStyles
           withNormalizeCSS
           theme={{
-            colorScheme: "dark",
+            colorScheme: "light",
           }}
         >
           <AppHeader>
