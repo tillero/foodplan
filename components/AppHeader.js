@@ -17,20 +17,28 @@ import SignUp from "./SignUp";
 import Login from "./Login";
 import { useRouter } from "next/router";
 
-const Navigation = ({ isLoggedIn }) => {
+const Navigation = ({ isLoggedIn, setNavOpened }) => {
+  const onClick = () => {
+    setNavOpened(false);
+  };
+
   return (
     <>
-      <Link href="/so-gehts" hidden={isLoggedIn}>
+      <Link href="/so-gehts" hidden={isLoggedIn} onClick={onClick}>
         So funktioniert es
       </Link>
-      <Link hidden={!isLoggedIn} href="/profil">
+      <Link hidden={!isLoggedIn} href="/profil" onClick={onClick}>
         Profil
       </Link>
-      <Link hidden={!isLoggedIn} href="/haushalt">
+      <Link hidden={!isLoggedIn} href="/haushalt" onClick={onClick}>
         Haushalt
       </Link>
-      <Link href="/plan">Wochenplan</Link>
-      <Link href="/rezepte">Rezepte</Link>
+      <Link href="/plan" onClick={onClick}>
+        Wochenplan
+      </Link>
+      <Link href="/rezepte" onClick={onClick}>
+        Rezepte
+      </Link>
     </>
   );
 };
@@ -78,7 +86,7 @@ const AppHeader = (props) => {
             hidden={!navOpened}
             width={{ sm: 200, lg: 300 }}
           >
-            <Navigation isLoggedIn={isLoggedIn} />
+            <Navigation isLoggedIn={isLoggedIn} setNavOpened={setNavOpened} />
           </Navbar>
         }
         navbarOffsetBreakpoint={10000}
@@ -122,7 +130,10 @@ const AppHeader = (props) => {
                       gap: "60px",
                     }}
                   >
-                    <Navigation isLoggedIn={isLoggedIn} />
+                    <Navigation
+                      isLoggedIn={isLoggedIn}
+                      setNavOpened={setNavOpened}
+                    />
                   </div>
                 </div>
               </MediaQuery>

@@ -9,10 +9,9 @@ const getProductInfo = async (ids) => {
   }
   try {
     const res = await fetch(
-      `https://www.migros.ch/product-display/public/v2/product-cards?uids=${ids}&storeType=OFFLINE&region=gmaaa`,
+      `https://www.migros.ch/product-display/public/v2/product-cards?uids=${ids}&storeType=OFFLINE&region=gmaa`,
       {
         method: "GET",
-        credentials: "include",
       }
     );
     const data = await res.json();
@@ -20,8 +19,10 @@ const getProductInfo = async (ids) => {
       const brand = item.product?.brand;
       const versioning = item.versioning;
       const line = item.brandLine;
+      const quantity = item.product?.quantity;
       let label = item.name;
       let brandLabel;
+      let detailLabel;
       let uid = item.product?.uid;
       if (brand && line) {
         brandLabel = brand + " " + line;
@@ -33,16 +34,25 @@ const getProductInfo = async (ids) => {
         brandLabel = line;
         label = line + "\n" + label;
       }
-      if (versioning) {
+      if (quantity && versioning) {
+        detailLabel = versioning + ", " + quantity;
+        label += " - " + detailLabel;
+      } else if (versioning) {
+        detailLabel = versioning;
         label += " - " + versioning;
+      } else if (quantity) {
+        detailLabel = quantity;
+        label += " - " + quantity;
       }
       return {
         name: item.name,
-        value: label + " " + uid.toString(),
+        value: label + " " + quantity + " " + uid.toString(),
         uid: uid,
         brandLabel,
         versioning,
+        detailLabel,
         label,
+        quantity,
         image: item.product.images[0].url,
         group: "Produkte",
       };
@@ -98,7 +108,8 @@ const testSearchData = [
     name: "Pepsi Max",
     uid: 100051284,
     value: "Pepsi\nPepsi Max 100051284",
-    versioning: "1L",
+    versioning: "Max",
+    quantity: "1L",
   },
   {
     brandLabel: "Coca-Cola",
@@ -110,6 +121,7 @@ const testSearchData = [
     uid: 100051545,
     value: "Coca-Cola\nCoca-Cola 100051545",
     versioning: "zero",
+    quantity: "500ml",
   },
   {
     group: "Vorschläge",
@@ -120,7 +132,7 @@ const testSearchData = [
 ];
 
 const AutoCompleteItem = forwardRef(function myAutoCompleteItem(
-  { name, label, image, brandLabel, versioning, group, ...others },
+  { name, label, image, brandLabel, detailLabel, group, ...others },
   ref
 ) {
   return (
@@ -138,9 +150,9 @@ const AutoCompleteItem = forwardRef(function myAutoCompleteItem(
           <div>
             {brandLabel && <Text size="xs">{brandLabel}</Text>}
             <Text fw={500}>{name}</Text>
-            {versioning && (
+            {detailLabel && (
               <Text size="xs" color="dimmed">
-                {versioning}
+                {detailLabel}
               </Text>
             )}
           </div>
@@ -152,13 +164,14 @@ const AutoCompleteItem = forwardRef(function myAutoCompleteItem(
   );
 });
 
-export default function ProductSearch() {
+export default function ProductSearch({ selectProduct }) {
   const [productSearch, setProductSearch] = useState("");
   const [searchData, setSearchData] = useState([]);
 
   const onProductSelected = (item) => {
     if (item.group === "Produkte") {
-      console.log("Added to ingredients", item);
+      //console.log("Added to ingredients", item);
+      selectProduct(item);
       onSearchInput("");
       setSearchData([]);
     }
@@ -182,7 +195,7 @@ export default function ProductSearch() {
       input &&
       input.length > 2 &&
       inputNew(input) &&
-      /^[a-zA-Z0-9 ]+$/.test(input)
+      /[\p{Letter}\p{Mark}\s-]+/gu.test(input)
     ) {
       getProducts(input)
         .then((data) => {
@@ -208,6 +221,7 @@ export default function ProductSearch() {
       data={searchData}
       nothingFound={productSearch > 2 ? "Keine Ergebnisse" : undefined}
       filter={(v, i) => true}
+      dropdownPosition="bottom"
     />
   );
 }

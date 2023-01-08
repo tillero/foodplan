@@ -1,17 +1,16 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 import {
   Box,
   TextInput,
-  Text,
   Group,
   Button,
-  Autocomplete,
+  Title,
+  Space,
+  MediaQuery,
 } from "@mantine/core";
-import ProductSearch from "./ProductSearch";
 import { useForm } from "@mantine/form";
-import Image from "next/image";
+import IngredientList from "./IngredientList";
 
 const CreateRecipeForm = () => {
   const router = useRouter();
@@ -27,9 +26,9 @@ const CreateRecipeForm = () => {
   });
 
   const onSubmit = () => {
-    /*form.clearErrors();
+    form.clearErrors();
     form.validate();
-    signInWithEmailAndPassword(form.values.email, form.values.password)
+    /*signInWithEmailAndPassword(form.values.email, form.values.password)
       .then((authUser) => {
         setOpened(false);
       })
@@ -39,16 +38,33 @@ const CreateRecipeForm = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 300 }} mx="auto">
+    <Box
+      sx={{
+        maxWidth: "900px",
+      }}
+      mx="auto"
+    >
+      <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+        <Title order={4}>Rezept erstellen</Title>
+      </MediaQuery>
+      <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+        <Title order={3}>Rezept erstellen</Title>
+      </MediaQuery>
+      <Space h="md" />
       <form onSubmit={form.onSubmit(onSubmit)}>
-        <TextInput
-          withAsterisk
-          label="Titel"
-          placeholder="Mein Rezept"
-          {...form.getInputProps("title")}
-        />
-        <ProductSearch />
-        <Group position="right" mt="md">
+        <Group position="left">
+          <div style={{ width: "35%", minWidth: "250px" }}>
+            <TextInput
+              withAsterisk
+              label="Titel"
+              placeholder="Mein Rezept"
+              {...form.getInputProps("title")}
+            />
+          </div>
+        </Group>
+        <Space h="md" />
+        <IngredientList />
+        <Group position="left" mt="md">
           <Button type="submit">Speichern</Button>
         </Group>
       </form>
