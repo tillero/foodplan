@@ -12,8 +12,8 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 
-const IngredientCard = ({ product, onClose }) => {
-  const { image, label, name, brandLabel, quantity } = product;
+const IngredientCard = ({ product, onClose, onUpdate, index }) => {
+  const { image, label, name, quantity } = product;
   const initialWeight = quantity ? parseInt(quantity.split(" ")[0]) : 1;
   const initialScale = quantity ? quantity.split(" ")[1] : "Stk.";
   const [scale, setScale] = useState(
@@ -32,6 +32,13 @@ const IngredientCard = ({ product, onClose }) => {
     } else if (weight > 10) {
       setWeight(1);
     }
+    onChange();
+  };
+
+  const onChange = () => {
+    product.weight = weight;
+    product.scale = scale;
+    onUpdate(product, index);
   };
 
   return (
@@ -74,12 +81,16 @@ const IngredientCard = ({ product, onClose }) => {
             </Stack>
             {quantity ? (
               <NumberInput
-                defaultValue={weight}
                 step={scale === "Stk." ? 1 : 5}
                 sx={{ maxWidth: "90px" }}
                 size="xs"
                 stepHoldDelay={500}
                 min={1}
+                value={weight}
+                onChange={(val) => {
+                  setWeight(val);
+                  onChange();
+                }}
                 stepHoldInterval={(t) => Math.max(1000 / t ** 2, 25)}
                 parser={(value) =>
                   value.replace(/[\p{Letter}\p{Mark}\s-]+/gu, "")
@@ -100,7 +111,10 @@ const IngredientCard = ({ product, onClose }) => {
                   min={1}
                   step={["g", "ml"].includes(scale) ? 5 : 1}
                   value={weight}
-                  onChange={(val) => setWeight(val)}
+                  onChange={(val) => {
+                    setWeight(val);
+                    onChange();
+                  }}
                 />
                 <NativeSelect
                   sx={{ maxWidth: "60px" }}
