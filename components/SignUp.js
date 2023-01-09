@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthUserContext";
 
 import { Box, TextInput, PasswordInput, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 
 const SignUp = ({ setOpened }) => {
   const router = useRouter();
@@ -37,6 +38,20 @@ const SignUp = ({ setOpened }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ uid }),
+    }).then((response) => {
+      if (response.ok) {
+        showNotification({
+          title: "Registrierung erfolgreich",
+          message: "Nutzer wurde erstellt",
+          color: "teal",
+        });
+      } else {
+        showNotification({
+          title: "Registrierung fehlgeschlagen",
+          message: response.statusText,
+          color: "red",
+        });
+      }
     });
   };
 
@@ -47,7 +62,6 @@ const SignUp = ({ setOpened }) => {
       .then((authUser) => {
         setOpened(false);
         createUserInDB(authUser.user.uid);
-        router.push("/profile");
       })
       .catch((error) => {
         form.setErrors({ email: error.message });

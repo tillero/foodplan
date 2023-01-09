@@ -15,7 +15,7 @@ import IngredientList from "./IngredientList";
 import StepsDisplay from "./StepDisplay";
 import { useState } from "react";
 
-const CreateRecipeForm = () => {
+const CreateRecipeForm = ({ saveRecipe }) => {
   const router = useRouter();
   const [steps, setSteps] = useState([""]);
   const [ingredients, setIngredients] = useState([]);
@@ -47,7 +47,7 @@ const CreateRecipeForm = () => {
       portions: form.values.portions,
       duration: form.values.duration,
     };
-    console.log(recipe);
+    saveRecipe(recipe);
   };
 
   return (
