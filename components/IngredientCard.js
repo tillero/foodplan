@@ -14,8 +14,22 @@ import { useState } from "react";
 
 const IngredientCard = ({ product, onClose, onUpdate, index }) => {
   const { image, label, name, quantity } = product;
-  const initialWeight = quantity ? parseInt(quantity.split(" ")[0]) : 1;
-  const initialScale = quantity ? quantity.split(" ")[1] : "Stk.";
+  let initialWeight = quantity ? parseInt(quantity.split(" ")[0]) : 1;
+  let initialScale = "Stk.";
+  if (quantity) {
+    initialScale = quantity.split(" ")[1]
+      ? quantity.split(" ")[1]
+      : quantity.replace(/\d+/g, "");
+  }
+  if (quantity && quantity.includes("x")) {
+    let ext_quant = quantity.split("x ")[1]
+      ? quantity.split("x ")[1]
+      : quantity.split("x")[1];
+    initialScale = ext_quant.split(" ")[1]
+      ? ext_quant.split(" ")[1]
+      : ext_quant.replace(/\d+/g, "");
+    initialWeight = parseInt(ext_quant);
+  }
   const [scale, setScale] = useState(
     initialScale === "Stück" ? "Stk." : initialScale
   );
@@ -29,7 +43,7 @@ const IngredientCard = ({ product, onClose, onUpdate, index }) => {
     setScale(value);
     if (["g", "ml"].includes(value) && weight < 10) {
       setWeight(100);
-    } else if (weight > 10) {
+    } else if (weight > 10 && !["g", "ml"].includes(value)) {
       setWeight(1);
     }
     onChange();
