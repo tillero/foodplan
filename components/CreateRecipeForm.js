@@ -15,17 +15,17 @@ import IngredientList from "./IngredientList";
 import StepsDisplay from "./StepDisplay";
 import { useState } from "react";
 
-const CreateRecipeForm = ({ saveRecipe }) => {
+const CreateRecipeForm = ({ saveRecipe, recipe }) => {
   const router = useRouter();
-  const [steps, setSteps] = useState([""]);
-  const [ingredients, setIngredients] = useState([]);
+  const [steps, setSteps] = useState(recipe.steps);
+  const [ingredients, setIngredients] = useState(recipe.ingredients);
 
   const form = useForm({
     initialValues: {
-      title: "",
+      title: recipe.title,
       steps: steps,
-      portions: 1,
-      duration: 30,
+      portions: recipe.portions,
+      duration: recipe.duration,
     },
     validate: {
       title: (value) =>

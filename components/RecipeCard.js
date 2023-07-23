@@ -1,7 +1,7 @@
 import { Text, Card, Center, Space, Stack } from "@mantine/core";
 
 const RecipeCard = ({ recipe }) => {
-  const { title, ingredients, duration, portions } = recipe;
+  const { title, ingredients, duration, portions, _id } = recipe;
   const hour = parseInt(duration / 60).toLocaleString("de-CH", {
     minimumIntegerDigits: 2,
     useGrouping: false,
@@ -19,6 +19,8 @@ const RecipeCard = ({ recipe }) => {
       radius="md"
       withBorder
       sx={{ height: 200, width: 180 }}
+      component="a"
+      href={"/rezepte/" + _id}
     >
       <Stack
         align="flex-start"
@@ -31,7 +33,7 @@ const RecipeCard = ({ recipe }) => {
             <Text
               fw={500}
               lineClamp={1}
-              truncate
+              truncate="true"
               size={title.length < 18 ? "md" : title.length < 25 ? "sm" : "xs"}
             >
               {title}
@@ -45,7 +47,7 @@ const RecipeCard = ({ recipe }) => {
                 return;
               }
               return (
-                <Text truncate lineClamp={1} size="xs" key={i}>
+                <Text truncate="true" lineClamp={1} size="xs" key={i}>
                   {item.weight || item.scale
                     ? "-" + item.weight + " " + item.scale + " " + item.name
                     : item.quantity

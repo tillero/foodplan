@@ -46,6 +46,14 @@ const CreateRecipe = () => {
     router.push("/rezepte");
   };
 
+  const emptyRecipe = {
+    title: "",
+    steps: [""],
+    ingredients: [],
+    duration: 30,
+    portions: 1,
+  };
+
   return (
     <>
       <Head>
@@ -56,7 +64,7 @@ const CreateRecipe = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <CreateRecipeForm saveRecipe={saveRecipe} />
+      <CreateRecipeForm saveRecipe={saveRecipe} recipe={emptyRecipe} />
     </>
   );
 };
